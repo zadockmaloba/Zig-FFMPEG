@@ -13,12 +13,12 @@ const libav = @cImport({
 fn fill_yuv_image(
     data: [*c][*c]u8,
     linesize: [*c]c_int,
-    width: i32,
-    height: i32,
-    frame_index: i32,
+    width: c_int,
+    height: c_int,
+    frame_index: c_int,
 ) void {
-    var x: i32 = 0;
-    var y: i32 = 0;
+    var x: c_int = 0;
+    var y: c_int = 0;
 
     while (y < height) : (y += 1) while (x < width) : (x += 1) {
         data[0][y * linesize[0] + x] = x + y + frame_index * 3;
@@ -35,8 +35,8 @@ fn fill_yuv_image(
 pub fn exec(argc: u8, argv: [][*]const u8) void {
     const src_data: [*c][*c]u8 = null;
     const dst_data: [*c][*c]u8 = null;
-    const src_linesize: [*c]c_int = undefined;
-    const dst_linesize: [*c]c_int = undefined;
+    const src_linesize: [*c]c_int = null;
+    const dst_linesize: [*c]c_int = null;
     const src_w: c_int = 320;
     const src_h: c_int = 240;
     var dst_w: c_int = undefined;
@@ -47,7 +47,7 @@ pub fn exec(argc: u8, argv: [][*]const u8) void {
 
     var dst_size: [*c]const u8 = null;
     var dst_filename: [*c]const u8 = null;
-    var dst_file: ?[*c]std.c.FILE = null;
+    var dst_file: [*c]stdio.struct__IO_FILE = null; //TODO: Research on *std.c.FILE does not work
 
     var dst_bufsize: c_ulong = 0;
     var sws_ctx: ?*libav.SwsContext = null;
@@ -83,7 +83,9 @@ pub fn exec(argc: u8, argv: [][*]const u8) void {
     }
 
     //TODO: Use Zig standard library
-    dst_file = std.c.fopen(dst_filename, "wb");
+    //NOTE: There is a significant difference when using functions imported from c.zig (std.c.____)
+    //stdio.fopen and std.c.fopen return different types
+    dst_file = stdio.fopen(dst_filename, "wb");
 
     if (dst_file == null) {
         _ = stdio.fprintf(
@@ -199,11 +201,11 @@ pub fn exec(argc: u8, argv: [][*]const u8) void {
         );
 
         // write scaled image to file
-        stdio.fwrite(
+        _ = stdio.fwrite(
             dst_data[0],
             1,
             dst_bufsize,
-            dst_file.?,
+            dst_file,
         );
     }
 
@@ -220,13 +222,13 @@ pub fn exec(argc: u8, argv: [][*]const u8) void {
 }
 
 fn fail(
-    out_file: ?*std.c.FILE,
+    out_file: [*c]stdio.struct__IO_FILE,
     source_data: [*c][*c]u8,
     dest_data: [*c][*c]u8,
     context: ?*libav.SwsContext,
 ) void {
     //TODO: Handle possible errors
-    _ = std.c.fclose(out_file.?);
+    _ = stdio.fclose(out_file);
     _ = source_data;
     _ = dest_data;
     //libav.av_freep(&source_data[0]);
