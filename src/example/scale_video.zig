@@ -21,14 +21,14 @@ fn fill_yuv_image(
     var y: c_int = 0;
 
     while (y < height) : (y += 1) while (x < width) : (x += 1) {
-        data[0][y * linesize[0] + x] = x + y + frame_index * 3;
+        data[0][@intCast(y * linesize[0] + x)] = @intCast(x + y + frame_index * 3);
     };
 
     y = 0;
     x = 0;
     while (y < height) : (y += 1) while (x < width) : (x += 1) {
-        data[1][y * linesize[1] + x] = 128 + y + frame_index * 2;
-        data[2][y * linesize[2] + x] = 64 + x + frame_index * 5;
+        data[1][@intCast(y * linesize[1] + x)] = @intCast(128 + y + frame_index * 2);
+        data[2][@intCast(y * linesize[2] + x)] = @intCast(64 + x + frame_index * 5);
     };
 }
 
