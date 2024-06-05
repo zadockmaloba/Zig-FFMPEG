@@ -29,6 +29,7 @@ pub fn build(b: *std.Build) void {
     exe.linkSystemLibrary("avdevice");
     exe.linkSystemLibrary("avfilter");
     exe.linkSystemLibrary("swscale");
+    exe.linkSystemLibrary("drm"); //TODO: investigate more on this
     exe.linkLibC();
 
     // This declares intent for the executable to be installed into the
@@ -74,7 +75,8 @@ pub fn build(b: *std.Build) void {
     exe_unit_tests.linkSystemLibrary("avutil");
     exe_unit_tests.linkSystemLibrary("avdevice");
     exe_unit_tests.linkSystemLibrary("avfilter");
-    exe.linkSystemLibrary("swscale");
+    exe_unit_tests.linkSystemLibrary("swscale");
+    exe_unit_tests.linkSystemLibrary("drm");
     exe_unit_tests.linkLibC();
 
     const run_exe_unit_tests = b.addRunArtifact(exe_unit_tests);
