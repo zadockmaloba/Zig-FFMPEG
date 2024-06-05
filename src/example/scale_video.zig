@@ -32,7 +32,7 @@ fn fill_yuv_image(
     };
 }
 
-pub fn exec(argc: u8, argv: [][*]const u8) void {
+pub inline fn exec(argc: u8, argv: []const [*c]const u8) void {
     const src_data: [*c][*c]u8 = null;
     const dst_data: [*c][*c]u8 = null;
     const src_linesize: [*c]c_int = null;
@@ -63,7 +63,7 @@ pub fn exec(argc: u8, argv: [][*]const u8) void {
             \\API example program to show how to scale an image with libswscale.
             \\This program generates a series of pictures, rescales them to the given
             \\output_size and saves them to an output file named output_file.
-            \\\n 
+            \\
             ,
         );
         std.c.exit(1);
