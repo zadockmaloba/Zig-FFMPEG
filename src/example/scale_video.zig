@@ -59,10 +59,10 @@ pub fn exec(argc: u8, argv: [][*]const u8) void {
         //TODO: Use Zig standard library
         _ = stdio.fprintf(
             stdio.stderr,
-            \\Usage: output_file output_size\n
-            \\API example program to show how to scale an image with libswscale.\n
+            \\Usage: output_file output_size
+            \\API example program to show how to scale an image with libswscale.
             \\This program generates a series of pictures, rescales them to the given
-            \\output_size and saves them to an output file named output_file\n.
+            \\output_size and saves them to an output file named output_file.
             \\\n 
             ,
         );
